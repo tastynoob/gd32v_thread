@@ -1,5 +1,1 @@
-*.o
-*/build
-*~
-*.tmp
-*/.deps
+build/*

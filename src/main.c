@@ -11,14 +11,13 @@
 
 
 
-
+   
 
 
 
 
 
 int main(void) {
-
     Init();
     myalloc_init();
     thread_init();
