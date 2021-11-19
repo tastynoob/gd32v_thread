@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "jlink",
+            "servertype": "jlink",
+            "interface": "jtag",
+            "executable": ".\\build\\Debug\\gd32vf103_thread.elf",
+            "runToMain": true,
+            "device": "GD32VF103C8T6"
+        }
+    ]
+}
