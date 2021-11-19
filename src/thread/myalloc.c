@@ -64,7 +64,7 @@ void* myalloc(u32 sizeofbyte) {
                 }
                 break;
             }
-            else { //下一个块不为空
+            else { //下一个块不为空 
                 if (temp->size >= real_size) { //如果当前块的大小满足要求
                     //如果当前块减去分配的内存，剩余的大小还能够再分配一个小块
                     if (temp->size - real_size > sizeof(mem_block) + 4) {
