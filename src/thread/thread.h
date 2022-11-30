@@ -6,9 +6,11 @@
 
 //最大可用线程数
 #define max_thread_num 5
+//消息队列长度
+#define max_msgqueue_len 10
+
 
 typedef void(*Func)();
-
 typedef struct {
     volatile int sp;
     volatile int fp;
@@ -19,12 +21,24 @@ typedef struct {
     volatile int re_pri;//重装载优先级,每当一个线程运行完毕就会重置pri
 }Thread;
 
-extern volatile int thd_flag;
+typedef struct 
+{
+    volatile int id;
+    volatile uint8_t msg[12];
+    volatile char* data_buf;
+    volatile int data_len;
+} Msg;
 
+
+
+extern volatile int thd_flag;
 extern volatile int thd_ptr;
 extern Thread* thd_ptr_;
 extern int thd_stop_flag;
 extern Thread thds[max_thread_num];
+
+extern Msg msg_queue[max_msgqueue_len];
+extern volatile int msg_queue_nums;
 
 //线程初始化
 void thread_init();
@@ -35,6 +49,16 @@ void thread_release(int thd_id);//线程释放
 void thread_sleep_tick(int tick);
 //线程开启调度
 void thread_start();
+
+
+//消息队列:添加消息
+int msg_queue_set(int id, const uint8_t msg[12],char* data_buf,int data_len);
+//消息队列:获取消息
+int msg_queue_get(int id, const uint8_t msg[12], char** data_buf, int* data_len);
+//查询是否存在目的id的消息
+int msg_queue_available(int id);
+
+
 
 
 //在进行一些不可分割操作时，调用该函数进行暂停线程调度

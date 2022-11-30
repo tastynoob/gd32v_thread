@@ -17,14 +17,23 @@
         "C_Cpp.default.intelliSenseMode": "gcc-arm",
         "files.autoGuessEncoding": true,
         "C_Cpp.default.cppStandard": "c++14",
-        "C_Cpp.default.cStandard": "c99"
+        "C_Cpp.default.cStandard": "c99",
+        "[yaml]": {
+            "editor.insertSpaces": true,
+            "editor.tabSize": 4,
+            "editor.autoIndent": "advanced"
+        },
+        "EIDE.SourceTree.AutoSearchIncludePath": true,
+        "EIDE.SourceTree.AutoSearchObjFile": true
     },
     "extensions": {
         "recommendations": [
             "cl.eide",
             "keroc.hex-fmt",
+            "xiaoyongdong.srecord",
             "hars.cppsnippets",
-            "zixuanwang.linkerscript"
+            "zixuanwang.linkerscript",
+            "redhat.vscode-yaml"
         ]
     }
 }

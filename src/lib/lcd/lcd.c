@@ -339,12 +339,14 @@ void Lcd_Init(void) {
 ******************************************************************************/
 void LCD_Clear(u16 Color) {
 	u16 i, j;
+	thd_stop;
 	LCD_Address_Set(0, 0, LCD_W - 1, LCD_H - 1);
 	for (i = 0;i < LCD_W;i++) {
 		for (j = 0;j < LCD_H;j++) {
 			LCD_WR_DATA(Color);
 		}
 	}
+	thd_cont;
 }
 
 
@@ -411,13 +413,14 @@ void LCD_DrawPoint_big(u16 x, u16 y, u16 color) {
 	   Return value: None
 ******************************************************************************/
 void LCD_Fill(u16 xsta, u16 ysta, u16 xend, u16 yend, u16 color) {
-	;
 	u16 i, j;
+	thd_stop;
 	LCD_Address_Set(xsta, ysta, xend, yend);      //设置光标位置 
+	
 	for (i = ysta;i <= yend;i++) {
 		for (j = xsta;j <= xend;j++)LCD_WR_DATA(color);//设置光标位置 	    
 	}
-	;
+	thd_cont;
 }
 
 
@@ -521,6 +524,7 @@ void LCD_ShowChar(u16 x, u16 y, u8 num, u8 mode, u16 color) {
 	u16 x0 = x;
 	if (x > LCD_W - 16 || y > LCD_H - 16)return;	    //Settings window		   
 	num = num - ' ';//Get offset value
+	thd_stop;
 	LCD_Address_Set(x, y, x + 8 - 1, y + 16 - 1);      //Set cursor position
 	if (!mode) //Non-overlapping
 	{
@@ -546,6 +550,7 @@ void LCD_ShowChar(u16 x, u16 y, u8 num, u8 mode, u16 color) {
 			}
 		}
 	}
+	thd_cont;
 }
 
 
@@ -602,9 +607,7 @@ void LCD_ShowNum(u16 x, u16 y, u16 num, u8 len, u16 color) {
 			else enshow = 1;
 
 		}
-
 		LCD_ShowChar(x + 8 * t, y, temp + 48, 0, color);
-
 	}
 }
 

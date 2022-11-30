@@ -2,7 +2,7 @@
 
 
 
-volatile u32 buff[16 * (1024 / 4)];//16k
+volatile u32 buff[20 * (1024 / 4)];
 
 #define alloc_addr (int)buff
 #define alloc_size 16*1024
@@ -25,12 +25,10 @@ void myalloc_init() {
 }
 
 
-
 void* myalloc(u32 sizeofbyte) {
 
     thd_stop;
     mem_block* temp = alloc_head;//指向当前块
-
     if (sizeofbyte == 0) {
         thd_cont;
         return 0;
@@ -38,7 +36,6 @@ void* myalloc(u32 sizeofbyte) {
     //实际分配的大小
     int real_size = 4 * (sizeofbyte / 4 + ((sizeofbyte % 4) ? 1 : 0));
 
-    
     while (1) {
 
         if (temp->avaliable == 0) { //当前块没有被使用
@@ -77,7 +74,7 @@ void* myalloc(u32 sizeofbyte) {
                         temp->next = temp1;
                         temp->size = real_size;
                     }
-
+                    real_size = temp->size;
                     temp->avaliable = 1;
                     break;
                 }

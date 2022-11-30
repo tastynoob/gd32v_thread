@@ -21,6 +21,7 @@ Original Author: Shay Gal-on
    initial parameters, tun t he benchmark and report the results.
 */
 #include "coremark.h"
+#include "thread.h"
 
 /* Function: iterate
         Run the benchmark for a specified number of iterations.
@@ -354,6 +355,9 @@ for (i = 0; i < MULTITHREAD; i++)
         }
     }
     total_errors += check_data_types();
+
+    thd_stop;
+
     /* and report results */
     ee_printf("CoreMark Size    : %d\n", (int)results[0].size);
     ee_printf("Total ticks      : %d\n", (int)total_time);
@@ -437,6 +441,6 @@ for (i = 0; i < MULTITHREAD; i++)
 #endif
     /* And last call any target specific code for finalizing */
     portable_fini(&(results[0].port));
-
+    thd_cont;
     return MAIN_RETURN_VAL;
 }

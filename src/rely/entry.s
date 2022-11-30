@@ -1,4 +1,5 @@
 // See LICENSE for license details
+//异常中断中间处理程序,禁止改动
 
 #ifndef ENTRY_S
 #define ENTRY_S
@@ -206,6 +207,7 @@
 ###############################################
 // Trap entry point
 //
+//异常处理函数
   .section      .text.trap	
   .align 6// In CLIC mode, the trap entry must be 64bytes aligned
   .global trap_entry
@@ -240,6 +242,7 @@ trap_entry:
 ###############################################
 // IRQ entry point
 //
+//中断处理循环
   .section      .text.irq	
   .align 2
   .global irq_entry
@@ -250,8 +253,10 @@ irq_entry: // -------------> This label will be set to MTVT2 register
   //保存现场
   SAVE_CONTEXT// Save 16 regs
 
-
-
+  //依次保存mcause meoc msubm寄存器
+  // *(sp+17*4) = mcause
+  // *(sp+18*4) = mepc
+  // *(sp+19*4) = msubm
   //------This special CSR read operation, which is actually use mcause as operand to directly store it to memory
   csrrwi  x0, CSR_PUSHMCAUSE, 17
   //------This special CSR read operation, which is actually use mepc as operand to directly store it to memory
@@ -267,15 +272,13 @@ service_loop:
   // ID, if the ID is not 0, then automatically enable the mstatus.MIE, and jump to its vector-entry-label, and
   // update the link register 
 
-  csrrw ra, CSR_JALMNXTI, ra 
+  csrrw ra, CSR_JALMNXTI, ra //处理中断
   
   //RESTORE_CONTEXT_EXCPT_X5
 
   //恢复现场
   #---- Critical section with interrupts disabled -----------------------
   DISABLE_MIE # Disable interrupts 
-
-
 
 
   LOAD x5,  19*REGBYTES(sp)
@@ -310,15 +313,16 @@ TIMER6_IRQHandler:
   STORE x9, 10*REGBYTES(sp)
 
 
-
   mv a0,sp //sp
   mv a1,s0 //fp
 
+  //调用switch_thread
   addi sp,sp,-4
   sw ra,0(sp)
   call switch_thread
   lw ra,0(sp)
   addi sp,sp,4
+  //结束调用
 
   mv sp,x30 //切换sp
   mv s0,x31 //切换fp
@@ -349,7 +353,6 @@ TIMER6_IRQHandler:
   li	a2,-2
   sw	a2,0(a1)
   ret
-
 
 
 #endif
